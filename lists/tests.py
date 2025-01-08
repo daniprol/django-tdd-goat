@@ -23,3 +23,9 @@ class HomePageTest(TestCase):
         self.assertContains(response, "</html>")
         # NOTE: assertTemplateUsed only works for responses from test client
         self.assertTemplateUsed(response, "home.html")
+
+    def test_can_save_a_POST_request(self):
+        item_text = "A new list item"
+        response = self.client.post("/", data={"item_text": item_text})
+        self.assertContains(response, item_text)
+        self.assertTemplateUsed(response, "home.html")

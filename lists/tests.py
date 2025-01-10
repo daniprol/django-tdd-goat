@@ -28,8 +28,26 @@ class HomePageTest(TestCase):
     def test_can_save_a_POST_request(self):
         item_text = "A new list item"
         response = self.client.post("/", data={"item_text": item_text})
-        self.assertContains(response, item_text)
-        self.assertTemplateUsed(response, "home.html")
+
+        self.assertEqual(Item.objects.count(), 1)
+
+        new_item = Item.objects.first()
+        self.assertEqual(new_item.text, item_text)
+
+        # self.assertContains(response, item_text)
+        # self.assertTemplateUsed(response, "home.html")
+        self.assertRedirects(response, "/")
+
+    def test_only_saves_items_when_necessary(self):
+        self.client.get("/")
+        self.assertEqual(Item.objects.count(), 0)
+
+    def test_displays_all_list_items(self):
+        Item.objects.create(text="item1")
+        Item.objects.create(text="item2")
+        response = self.client.get("/")
+        self.assertContains(response, "item1")
+        self.assertContains(response, "item2")
 
 
 class ItemModelTests(TestCase):

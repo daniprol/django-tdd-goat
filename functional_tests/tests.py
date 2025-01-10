@@ -1,13 +1,17 @@
 import time
-import unittest
 
-from django.template import Library
 from django.test import LiveServerTestCase
 from selenium import webdriver
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
+# IDEA: slow waiting locally and larger number for CI/CD
+MAX_WAIT_SECONDS = 5
+SLEEP_INTERVAL = 0.5
 
+
+# NOTE: NoSuchElementException and StaleElementException errors are often a sign that you need an explicit wait.
 class NewVisitorTest(LiveServerTestCase):
     def setUp(self):
         """Runs before every test method!"""
@@ -39,23 +43,30 @@ class NewVisitorTest(LiveServerTestCase):
         # "1: Buy peacock feathers" as an item in a to-do list
         input_box.send_keys(Keys.ENTER)
         # FIXME: remove explicit wait
-        time.sleep(1)
         self.check_for_row_in_list_table("1: Buy peacock feathers")
 
         # There is still a text box inviting her to add another item.
         input_box = self.browser.find_element(By.ID, "id_new_item")
         input_box.send_keys("Use peacock feathers to make a fly")
         input_box.send_keys(Keys.ENTER)
-        time.sleep(1)
 
         self.check_for_row_in_list_table("1: Buy peacock feathers")
         self.check_for_row_in_list_table("2: Use peacock feathers to make a fly")
 
     def check_for_row_in_list_table(self, row_text):
-        table = self.browser.find_element(By.ID, "id_list_table")
-        rows = table.find_elements(By.TAG_NAME, "tr")
-        self.assertIn(row_text, [row.text for row in rows])
-        # self.assertTrue(
-        #     any(row.text == "1: Buy peacock feathers" for row in rows),
-        #     f"New todo did not appear in table. Contents were:\n{table.text}",
-        # )
+        start_time = time.time()
+        while True:
+            try:
+                table = self.browser.find_element(By.ID, "id_list_table")
+                rows = table.find_elements(By.TAG_NAME, "tr")
+                self.assertIn(row_text, [row.text for row in rows])
+                # self.assertTrue(
+                #     any(row.text == "1: Buy peacock feathers" for row in rows),
+                #     f"New todo did not appear in table. Contents were:\n{table.text}",
+                # )
+                return
+
+            except (AssertionError, WebDriverException):
+                if time.time() - start_time > MAX_WAIT_SECONDS:
+                    raise
+                time.sleep(SLEEP_INTERVAL)

@@ -5,3 +5,5 @@
 * `urls.py` is the same as **routing**: maps URLs to view functions
 
 * When using `csrf_token` in templates Django substitutes it for a `<input type="hidden">` with the CRSF token
+
+* Migrations are applied automatically for testing databases

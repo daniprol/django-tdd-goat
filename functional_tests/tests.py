@@ -6,7 +6,7 @@ from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
-# IDEA: slow waiting locally and larger number for CI/CD
+# TODO: slow waiting locally and larger number for CI/CD
 MAX_WAIT_SECONDS = 5
 SLEEP_INTERVAL = 0.5
 

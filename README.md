@@ -7,3 +7,4 @@
 * When using `csrf_token` in templates Django substitutes it for a `<input type="hidden">` with the CRSF token
 
 * Migrations are applied automatically for testing databases
+* **REST CONVENTION**: URLs without a trailing slash (e.g. `/list/new`) are **actions** which modify the database

@@ -11,7 +11,7 @@
     <h1>Start a new To-Do list</h1>
 
     <!-- By default the action is the same page -->
-    <form action="/" method="post">
+    <form action="/lists/new" method="post">
         <input type="text" name="item_text" id="id_new_item" placeholder="Enter a to-do item">
         {% csrf_token %}
     </form>

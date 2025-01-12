@@ -5,15 +5,6 @@ from .models import Item
 
 
 def home_page(request: HttpRequest):
-    if request.method == "POST":
-        # This needs an explicit save!
-        # item = Item(text=request.POST.get("item_text", ""))
-
-        # item.text = request.POST.get("item_text", "")
-        # item.save()
-        Item.objects.create(text=request.POST.get("item_text", ""))
-        return redirect("/lists/the-only-list-in-the-world/")
-
     # context = {}
     # if request.method == "POST":
     #     context["new_item_text"] = request.POST["item_text"]
@@ -25,3 +16,9 @@ def home_page(request: HttpRequest):
 def view_list(request: HttpRequest):
     items = Item.objects.all()
     return render(request, "list.html", {"items": items})
+
+
+def new_list(request: HttpRequest):
+    # FIXME: only POST requests are supported for now
+    Item.objects.create(text=request.POST["item_text"])
+    return redirect("/lists/the-only-list-in-the-world/")

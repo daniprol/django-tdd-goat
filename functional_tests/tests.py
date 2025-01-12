@@ -43,17 +43,53 @@ class NewVisitorTest(LiveServerTestCase):
         # "1: Buy peacock feathers" as an item in a to-do list
         input_box.send_keys(Keys.ENTER)
         # FIXME: remove explicit wait
-        self.check_for_row_in_list_table("1: Buy peacock feathers")
+        self.wait_for_row_in_list_table("1: Buy peacock feathers")
 
         # There is still a text box inviting her to add another item.
         input_box = self.browser.find_element(By.ID, "id_new_item")
         input_box.send_keys("Use peacock feathers to make a fly")
         input_box.send_keys(Keys.ENTER)
 
-        self.check_for_row_in_list_table("1: Buy peacock feathers")
-        self.check_for_row_in_list_table("2: Use peacock feathers to make a fly")
+        self.wait_for_row_in_list_table("1: Buy peacock feathers")
+        self.wait_for_row_in_list_table("2: Use peacock feathers to make a fly")
 
-    def check_for_row_in_list_table(self, row_text):
+    def test_multiple_users_can_start_lists_at_multiple_urls(self):
+        self.browser.get(self.live_server_url)
+
+        inputbox = self.browser.find_element(By.ID, "id_new_item")
+        inputbox.send_keys("Buy peacock feathers")
+        inputbox.send_keys(Keys.ENTER)
+
+        self.wait_for_row_in_list_table("1: Buy peacock feathers")
+
+        user_list_url = self.browser.current_url
+        self.assertRegex(user_list_url, "/lists/.+")  # +: one or more
+
+        # Delete cookies to simulate a new user session
+        self.browser.delete_all_cookies()
+
+        self.browser.get(self.live_server_url)
+        page_text = self.browser.find_element(By.TAG_NAME, "body").text
+        self.assertNotIn("Buy peacock feathers", page_text)
+        self.assertNotIn("make a fly", page_text)
+
+        # New user adds an item
+        inputbox = self.browser.find_element(By.ID, "id_new_item")
+        inputbox.send_keys("Buy milk")
+        inputbox.send_keys(Keys.ENTER)
+
+        self.wait_for_row_in_list_table("1: Buy milk")
+
+        new_user_list_url = self.browser.current_url
+        self.assertRegex(user_list_url, "/lists/.+")  # +: one or more
+        self.assertNotEqual(user_list_url, new_user_list_url)
+
+        # Check there is no trace of the old user list
+        page_text = self.browser.find_element(By.TAG_NAME, "body").text
+        self.assertNotIn("Buy peacock feathers", page_text)
+        self.assertIn("Buy milk", page_text)
+
+    def wait_for_row_in_list_table(self, row_text):
         start_time = time.time()
         while True:
             try:

@@ -10,3 +10,5 @@
 
 * **REST CONVENTION**: URLs without a trailing slash (e.g. `/list/new`) are **actions** which modify the database
 * In Django ORM when comparing 2 objects for equality, primary keys (e.g. `id`) will be used, instead of Python object hashes
+* Django test client adds *context* to the response received from a request!
+* Django ORM allows to do a reverse lookup: `{% for item in list.item_set.all %}`

@@ -1,7 +1,7 @@
 from django.http import HttpRequest, HttpResponse
 from django.test import TestCase
 
-from .models import Item
+from .models import Item, List
 from .views import home_page
 
 # NOTE: each TestCase method uses a transaction that will be rolled back => clean database state between tests
@@ -37,8 +37,9 @@ class ListViewTest(TestCase):
         self.assertTemplateUsed(response, "list.html")
 
     def test_displays_all_list_items(self):
-        Item.objects.create(text="item1")
-        Item.objects.create(text="item2")
+        mylist = List.objects.create()
+        Item.objects.create(text="item1", list=mylist)
+        Item.objects.create(text="item2", list=mylist)
         response = self.client.get("/lists/the-only-list-in-the-world/")
         self.assertContains(response, "item1")
         self.assertContains(response, "item2")
@@ -64,16 +65,26 @@ class NewListTest(TestCase):
         self.assertRedirects(response, "/lists/the-only-list-in-the-world/")
 
 
-class ItemModelTests(TestCase):
+class ListAndItemModelsTest(TestCase):
     def test_saving_and_retrieving_items(self):
         # NOTE: this wouldn't be a unit test (but a integration one) because it uses a dependency (the db)
+        mylist = List()
+        mylist.save()
+
         first_item = Item()
         first_item.text = "The first (ever) list item"
+        first_item.list = mylist
         first_item.save()
 
         second_item = Item()
         second_item.text = "The second item"
+        second_item.list = mylist
         second_item.save()
+
+        # get() will error ir 0 or >1 results are found
+        saved_list = List.objects.get()
+        # NOTE: they will be compared by "id" primary key and not hash
+        self.assertEqual(saved_list, mylist)
 
         saved_items = Item.objects.all()  # returns a Queryset (list-like object)
         # TODO: check that using len() would be more inefficient
@@ -82,4 +93,6 @@ class ItemModelTests(TestCase):
         first_saved_item = saved_items[0]
         second_saved_item = saved_items[1]
         self.assertEqual(first_saved_item.text, "The first (ever) list item")
+        self.assertEqual(first_saved_item.list, mylist)
         self.assertEqual(second_saved_item.text, "The second item")
+        self.assertEqual(second_saved_item.list, mylist)

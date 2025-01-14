@@ -1,7 +1,7 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 
-from .models import Item
+from .models import Item, List
 
 
 def home_page(request: HttpRequest):
@@ -20,5 +20,6 @@ def view_list(request: HttpRequest):
 
 def new_list(request: HttpRequest):
     # FIXME: only POST requests are supported for now
-    Item.objects.create(text=request.POST["item_text"])
+    nulist = List.objects.create()
+    Item.objects.create(text=request.POST["item_text"], list=nulist)
     return redirect("/lists/the-only-list-in-the-world/")

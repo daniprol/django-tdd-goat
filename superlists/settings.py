@@ -116,6 +116,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
+# All URLs prefixed with "static" will be treated as static files instead of normal Django views
+# It works for "static" folders of all Django apps
 STATIC_URL = "static/"
 
 # Default primary key field type

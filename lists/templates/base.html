@@ -1,24 +1,44 @@
 <!DOCTYPE html>
+<!-- <html lang="en" data-bs-theme="dark"> -->
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To-Do lists</title>
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
 </head>
 
 <body>
-    <h1>{% block header_text %}{% endblock %}</h1>
+    <div class="container">
+        <div class="row justify-content-center p-5 bg-body-tertiary">
+            <div class="col-lg-6 text-center">
+                <!-- <h1 class="text-body-emphasis">Basic jumbotron</h1>
+                <p class="lead">
+                    This is a simple Bootstrap jumbotron that sits within a <code>.container</code>, recreated with
+                    built-in utility classes.
+                </p> -->
+                <h1 class="display-1 mb-4">{% block header_text %}{% endblock %}</h1>
 
-    <!-- By default the action is the same page -->
-    <form action="{% block form_action %}{% endblock %}" method="post">
-        <input type="text" name="item_text" id="id_new_item" placeholder="Enter a to-do item">
-        {% csrf_token %}
-    </form>
+                <!-- By default the action is the same page -->
+                <form action="{% block form_action %}{% endblock %}" method="post">
+                    <input class="form-control form-control-lg" type="text" name="item_text" id="id_new_item"
+                        placeholder="Enter a to-do item">
+                    {% csrf_token %}
+                </form>
+            </div>
+        </div>
 
-    {% block table %}
-    {% endblock %}
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
 
+            {% block table %}
+            {% endblock %}
+
+        </div>
+    </div>
+    </div>
 </body>
 
 </html>

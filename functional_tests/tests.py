@@ -1,6 +1,6 @@
 import time
 
-from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.by import By
@@ -12,7 +12,7 @@ SLEEP_INTERVAL = 0.5
 
 
 # NOTE: NoSuchElementException and StaleElementException errors are often a sign that you need an explicit wait.
-class NewVisitorTest(LiveServerTestCase):
+class NewVisitorTest(StaticLiveServerTestCase):
     def setUp(self):
         """Runs before every test method!"""
         self.browser = webdriver.Firefox()

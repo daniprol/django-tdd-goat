@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    "django.contrib.admin",
+    "django.contrib.admin",  # To enable django-admin
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -119,6 +119,9 @@ USE_TZ = True
 # All URLs prefixed with "static" will be treated as static files instead of normal Django views
 # It works for "static" folders of all Django apps
 STATIC_URL = "static/"
+
+# Where to place the static files of the entire project when running ./manage.py collectstatic
+STATIC_ROOT = BASE_DIR / "static"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

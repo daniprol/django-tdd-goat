@@ -16,3 +16,7 @@
 * `LiveServerTestCase` doesn't find *static* files automatically: `StaticLiveServerTestCase` does.
 
 * **TRICK**: use `git reset --hard` in general to cleanup dirty files in your workspace.
+* To collect static files and ignore django admin files in the venv: `./manage.py collecstatic --ignore "admin"`
+
+> Testing layout features will only be done as a mean to check that static files and styling is loaded correctly
+> You may also want tests for JS features that are tricky to implement

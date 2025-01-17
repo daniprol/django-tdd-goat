@@ -10,3 +10,7 @@ wheels/
 .venv
 
 *.sqlite3
+
+# Django specific
+# Only ignores "static" folder in repo base directory
+/static

@@ -13,3 +13,5 @@
 * Django test client adds *context* to the response received from a request!
 * Django ORM allows to do a reverse lookup: `{% for item in list.item_set.all %}`
 * To test just 1 method: `./manage.py test lists.tests.NewListTest.test_can_save_a_POST_request`
+
+* **TRICK**: use `git reset --hard` in general to cleanup dirty files in your workspace.

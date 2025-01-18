@@ -1,3 +1,4 @@
+import os
 import time
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
@@ -16,6 +17,9 @@ class NewVisitorTest(StaticLiveServerTestCase):
     def setUp(self):
         """Runs before every test method!"""
         self.browser = webdriver.Firefox()
+        test_server = os.environ.get("TEST_SERVER")
+        if test_server:
+            self.live_server_url = "http://" + test_server
 
     def tearDown(self):
         # Will close browser even when test fails

@@ -20,3 +20,5 @@
 
 > Testing layout features will only be done as a mean to check that static files and styling is loaded correctly
 > You may also want tests for JS features that are tricky to implement
+
+* Use `--failfast` in functional tests to avoid waiting.

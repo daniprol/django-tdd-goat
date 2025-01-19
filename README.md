@@ -22,3 +22,9 @@
 > You may also want tests for JS features that are tricky to implement
 
 * Use `--failfast` in functional tests to avoid waiting.
+* Using `export` will make set the variable permanently in that shell.
+
+## Docker 
+* By default `runserver` binds the `127.0.0.1` but that IP is not the network adapter that containers expose to the outside world.
+* Use `runserver 0.0.0.0:8000` as Docker command instead.
+* Instead of `-v` use `type=bind,source=./src/db.sqlite3,target=/src/db.sqlite3` to mount volumes. This helps showing you errors if the target directory doesn't exist.

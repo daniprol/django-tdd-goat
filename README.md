@@ -28,3 +28,27 @@
 * By default `runserver` binds the `127.0.0.1` but that IP is not the network adapter that containers expose to the outside world.
 * Use `runserver 0.0.0.0:8000` as Docker command instead.
 * Instead of `-v` use `type=bind,source=./src/db.sqlite3,target=/src/db.sqlite3` to mount volumes. This helps showing you errors if the target directory doesn't exist.
+
+## Gunicorn
+```bash
+gunicorn "superlists.wsgi:application" --bind :5000 --workers 4 --worker-class uvicorn.workers.UvicornWorker --access-logfile="-"
+```
+**IMPORTANT:** unlike Django `runserver`, *gUnicorn* will not discover and serve static files automatically.
+* Use `whitenoise` as middleware to serve those files
+* To handle static files while using gUnicorn in `DEBUG MODE` you can add to `wsgi.py`:
+```python
+import os
+
+from django.conf import settings
+from django.contrib.staticfiles.handlers import StaticFilesHandler
+from django.core.wsgi import get_wsgi_application
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "superlists.settings")
+
+
+if settings.DEBUG:
+    # Add middleware to handle static files when using gUnicorn in DEBUG MODE
+    application = StaticFilesHandler(get_wsgi_application())
+else:
+    application = get_wsgi_application()
+```

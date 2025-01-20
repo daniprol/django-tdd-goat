@@ -30,5 +30,9 @@ ENV PATH="/src/.venv/bin:$PATH"
 # NOTE: --noinput flag avoids having to confirm anything
 RUN ["python", "manage.py", "migrate", "--noinput"]
 
+# TODO: check if we need to add `--ignore "admin"
+RUN ["python", "manage.py", "collectstatic"]
+
+ENV DJANGO_DEBUG_FALSE=1
 # CMD ["python", "manage.py", "runserver", "0.0.0.0:8888"]
 CMD ["gunicorn", "superlists.wsgi:application", "--bind", ":8888", "--access-logfile", "-"]

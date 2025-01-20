@@ -33,8 +33,15 @@
 ```bash
 gunicorn "superlists.wsgi:application" --bind :5000 --workers 4 --worker-class uvicorn.workers.UvicornWorker --access-logfile="-"
 ```
+* Run locally with production configuration:
+```bash
+DJANGO_DEBUG_FALSE=1 DJANGO_SECRET_KEY="asdf" DJANGO_ALLOWED_HOST="localhost" gunicorn --bind :5000 superlists.wsgi:application --access-logfile "-"
+```
+**WARNING:** you need to previously run `./manage.py collectstatic` to get all static files to work (`whitenoise` doesnt work automatically when DEBUG is false)
+
 **IMPORTANT:** unlike Django `runserver`, *gUnicorn* will not discover and serve static files automatically.
-* Use `whitenoise` as middleware to serve those files
+* Use `whitenoise` as middleware to serve those files when using gUnicorn **IF `DEBUG=TRUE`** (otherwise, it wont work!)
+* To server static files in production you need to run `collectstatic` in the Dockerfile
 * To handle static files while using gUnicorn in `DEBUG MODE` you can add to `wsgi.py`:
 ```python
 import os

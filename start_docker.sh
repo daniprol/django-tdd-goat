@@ -8,4 +8,10 @@ docker build -t "superlists:$APP_VERSION" -t "superlists:latest" .
 echo "FINISHED BUILDING IMAGE"
 
 echo "STARTING CONTAINER..."
-docker run -it --name app  -p 8888:8888 --mount type=bind,source=./src/db.sqlite3,target=/src/db.sqlite3 superlists
+docker run \
+    --name app \
+    -p 8888:8888 \
+    --mount type=bind,source=./src/db.sqlite3,target=/src/db.sqlite3 \
+    -e DJANGO_SECRET_KEY="secret" \
+    -e DJANGO_ALLOWED_HOST="localhost" \
+    -it superlists
